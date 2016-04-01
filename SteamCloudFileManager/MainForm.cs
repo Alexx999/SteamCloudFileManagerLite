@@ -75,7 +75,8 @@ namespace SteamCloudFileManager
             if (storage == null) throw new InvalidOperationException("Not connected");
             int totalBytes, availBytes;
             storage.GetQuota(out totalBytes, out availBytes);
-            quotaLabel.Text = string.Format("{0}/{1} bytes used", totalBytes - availBytes, totalBytes);
+            var numFiles = remoteListView.Items.Count;
+            quotaLabel.Text = string.Format("{2} files, {0}/{1} bytes used", totalBytes - availBytes, totalBytes, numFiles);
         }
 
         private void downloadButton_Click(object sender, EventArgs e)
