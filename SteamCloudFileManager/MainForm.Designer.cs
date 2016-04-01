@@ -64,6 +64,7 @@
             this.remoteListView.TabIndex = 0;
             this.remoteListView.UseCompatibleStateImageBehavior = false;
             this.remoteListView.View = System.Windows.Forms.View.Details;
+            this.remoteListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.remoteListView_ColumnClick);
             this.remoteListView.SelectedIndexChanged += new System.EventHandler(this.remoteListView_SelectedIndexChanged);
             // 
             // columnHeader1
