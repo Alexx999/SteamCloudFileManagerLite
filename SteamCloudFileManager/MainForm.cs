@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections;
 
 namespace SteamCloudFileManager
 {
     public partial class MainForm : Form
     {
         IRemoteStorage storage;
+        int sortColumn;
 
         public MainForm()
         {
@@ -59,7 +61,14 @@ namespace SteamCloudFileManager
                 remoteListView.Items.Clear();
                 foreach (IRemoteFile file in files)
                 {
-                    ListViewItem itm = new ListViewItem(new string[] { file.Name, file.Timestamp.ToString(), file.Size.ToString(), file.IsPersisted.ToString(), file.Exists.ToString() }) { Tag = file };
+                    ListViewItem itm = new ListViewItem();
+                    itm.SubItems[0].Text = file.Name;
+                    itm.SubItems[0].Tag = file.Name;
+                    itm.SubItems.Add(new ListViewItem.ListViewSubItem(itm, file.Timestamp.ToString()) { Tag = file.Timestamp });
+                    itm.SubItems.Add(new ListViewItem.ListViewSubItem(itm, file.Size.ToString()) { Tag = file.Size });
+                    itm.SubItems.Add(new ListViewItem.ListViewSubItem(itm, file.IsPersisted.ToString()) { Tag = file.IsPersisted });
+                    itm.SubItems.Add(new ListViewItem.ListViewSubItem(itm, file.Exists.ToString()) { Tag = file.Exists });
+                    itm.Tag = file;
                     remoteListView.Items.Add(itm);
                 }
                 updateQuota();
@@ -154,6 +163,50 @@ namespace SteamCloudFileManager
         private void remoteListView_SelectedIndexChanged(object sender, EventArgs e)
         {
             downloadButton.Enabled = deleteButton.Enabled = (storage != null && remoteListView.SelectedIndices.Count > 0);
+        }
+
+        private class ListViewItemComparer : IComparer
+        {
+            private int column;
+            private SortOrder sortOrder;
+
+            public ListViewItemComparer(int column, SortOrder sortOrder)
+            {
+                this.column = column;
+                this.sortOrder = sortOrder;
+            }
+
+            public int Compare(object x, object y) 
+            {
+                var xx = ((ListViewItem)x).SubItems[column];
+                var yy = ((ListViewItem)y).SubItems[column];
+                var a = xx.Tag as IComparable;
+                var b = yy.Tag as IComparable;
+                var order = (sortOrder == SortOrder.Ascending ? 1 : -1);
+                if (a != null && b != null)
+                    return a.CompareTo(b) * order;
+
+                // If the userdata isnt IComparable just fall back to string compare.
+                return String.Compare(xx.Text, yy.Text) * order;
+            }
+        };
+
+        private void remoteListView_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (sortColumn != e.Column)
+            {
+                // If column is different to last column just sort ascending.
+                sortColumn = e.Column;
+                remoteListView.Sorting = SortOrder.Ascending;
+            }
+            else
+            {
+                // Otherwise toggle between ascending/descending.
+                remoteListView.Sorting = remoteListView.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+            }
+
+            remoteListView.ListViewItemSorter = new ListViewItemComparer(e.Column, remoteListView.Sorting);
+            remoteListView.Sort();
         }
     }
 }
