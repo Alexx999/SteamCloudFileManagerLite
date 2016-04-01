@@ -205,6 +205,7 @@ namespace SteamCloudFileManager
                 remoteListView.Sorting = remoteListView.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
             }
 
+            remoteListView.SetSortIcon(e.Column, remoteListView.Sorting);
             remoteListView.ListViewItemSorter = new ListViewItemComparer(e.Column, remoteListView.Sorting);
             remoteListView.Sort();
         }
