@@ -39,6 +39,7 @@ namespace SteamCloudFileManager
                 storage = RemoteStorage.CreateInstance(uint.Parse(appIdTextBox.Text));
                 //storage = new RemoteStorageLocal("remote", uint.Parse(appIdTextBox.Text));
                 refreshButton.Enabled = true;
+                addButton.Enabled = true;
                 refreshButton_Click(this, EventArgs.Empty);
             }
             catch (Exception ex)
@@ -208,6 +209,32 @@ namespace SteamCloudFileManager
             remoteListView.SetSortIcon(e.Column, remoteListView.Sorting);
             remoteListView.ListViewItemSorter = new ListViewItemComparer(e.Column, remoteListView.Sorting);
             remoteListView.Sort();
+        }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            if (storage == null)
+            {
+                MessageBox.Show(this, "Not connected", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+            
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                foreach (var fileName in openFileDialog1.FileNames)
+                {
+                    CreateFile(fileName);
+                }
+            }
+            refreshButton_Click(this, EventArgs.Empty);
+        }
+
+        private void CreateFile(string path)
+        {
+            var name = Path.GetFileName(path);
+            var remoteFile = storage.GetFile(name);
+            var bytes = File.ReadAllBytes(path);
+            remoteFile.WriteAllBytes(bytes);
         }
     }
 }

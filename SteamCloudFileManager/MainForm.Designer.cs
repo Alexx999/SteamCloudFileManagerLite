@@ -43,6 +43,8 @@
             this.deleteButton = new System.Windows.Forms.Button();
             this.downloadButton = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.addButton = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // remoteListView
@@ -165,11 +167,27 @@
             this.saveFileDialog1.Filter = "All files|*";
             this.saveFileDialog1.Title = "Save remote file as...";
             // 
+            // addButton
+            // 
+            this.addButton.Enabled = false;
+            this.addButton.Location = new System.Drawing.Point(174, 232);
+            this.addButton.Name = "addButton";
+            this.addButton.Size = new System.Drawing.Size(75, 23);
+            this.addButton.TabIndex = 8;
+            this.addButton.Text = "Add";
+            this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.addButton_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Multiselect = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(618, 267);
+            this.Controls.Add(this.addButton);
             this.Controls.Add(this.downloadButton);
             this.Controls.Add(this.deleteButton);
             this.Controls.Add(this.remoteListView);
@@ -202,6 +220,8 @@
         private System.Windows.Forms.Button deleteButton;
         private System.Windows.Forms.Button downloadButton;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button addButton;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
