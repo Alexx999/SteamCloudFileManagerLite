@@ -106,6 +106,7 @@
             this.appIdTextBox.Name = "appIdTextBox";
             this.appIdTextBox.Size = new System.Drawing.Size(100, 20);
             this.appIdTextBox.TabIndex = 2;
+            this.appIdTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.appIdTextBox_KeyPress);
             // 
             // connectButton
             // 

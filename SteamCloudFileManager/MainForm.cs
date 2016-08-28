@@ -236,5 +236,14 @@ namespace SteamCloudFileManager
             var bytes = File.ReadAllBytes(path);
             remoteFile.WriteAllBytes(bytes);
         }
+
+        private void appIdTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\r')
+            {
+                e.Handled = true;
+                connectButton_Click(this, EventArgs.Empty);
+            }
+        }
     }
 }
