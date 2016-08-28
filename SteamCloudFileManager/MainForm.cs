@@ -56,6 +56,7 @@ namespace SteamCloudFileManager
                 return;
             }
 
+            remoteListView.BeginUpdate();
             try
             {
                 List<IRemoteFile> files = storage.GetFiles();
@@ -78,6 +79,8 @@ namespace SteamCloudFileManager
             {
                 MessageBox.Show(this, "Can't refresh." + Environment.NewLine + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+
+            remoteListView.EndUpdate();
         }
 
         void updateQuota()
@@ -134,7 +137,7 @@ namespace SteamCloudFileManager
             if (MessageBox.Show(this, "Are you sure you want to delete the selected files?", "Confirm deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == System.Windows.Forms.DialogResult.No) return;
 
             bool allSuccess = true;
-
+            remoteListView.BeginUpdate();
             foreach (ListViewItem item in remoteListView.SelectedItems)
             {
                 IRemoteFile file = item.Tag as IRemoteFile;
@@ -156,6 +159,7 @@ namespace SteamCloudFileManager
                     MessageBox.Show(this, file.Name + " failed to delete." + Environment.NewLine + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
+            remoteListView.EndUpdate();
 
             updateQuota();
             if (allSuccess) MessageBox.Show(this, "Files deleted.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
